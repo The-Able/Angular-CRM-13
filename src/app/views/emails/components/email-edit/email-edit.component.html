@@ -1,0 +1,113 @@
+<form novalidate [formGroup]="form" (submit)="create(form.value)">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <igx-input-group>
+                <input igxInput id="address" name="address" formControlName="address" type="text" />
+                <label igxLabel for="address">Address</label>
+            </igx-input-group>
+
+        </div>
+        <div class="col-md-12">
+            <igx-input-group>
+                <input igxInput id="name" name="name" formControlName="name"  type="text" />
+                <label igxLabel for="name">Name</label>
+            </igx-input-group>
+        </div>
+
+        <div class="col-md-12">
+
+            
+
+            <app-dropdown placeholder="Email Type" 
+                      
+                        [options]="emailTypeOptions$ | async"
+                        formControlName="type"
+                        label="Email Type">
+
+            </app-dropdown>
+
+        </div>
+
+        <div *ngIf="form.value.type =='Other'" class="col-md-12">
+            <igx-input-group>
+                <input igxInput id="otherLabel" name="otherLabel" formControlName="otherLabel"
+                    type="text" />
+                <label igxLabel for="otherLabel">Other Type</label>
+            </igx-input-group>
+        </div>
+
+        <div class="col-md-12">
+            <app-dropdown 
+                placeholder="Email Source" 
+            
+                [options]="emailSourceOptions$ | async"
+                formControlName="source"
+                label="Email Source">
+
+            </app-dropdown>
+        </div>
+
+
+        <div class="col-md-12">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="small-space"></div>
+                    <igx-checkbox [checked]="form.value.dflt" formControlName="dflt">
+                        Default Email
+                    </igx-checkbox>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="small-space"></div>
+                    <igx-checkbox [checked]="form.value.dnmm" formControlName="dnmm">
+                        Do Not Mass Mail
+                    </igx-checkbox>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="small-space"></div>
+                    <igx-checkbox [checked]="form.value.bounce"
+                    formControlName="bounce">
+                        Bounced Address
+                    </igx-checkbox>
+                </div>
+
+           
+            </div>
+
+        </div>
+
+        <div class="col-md-6 text-left">
+            <!--
+              <button *ngIf="formData && formData.id" type="button"
+                      igxButton igxRipple (click)="markAsBad(formData.id)">
+                  Mark as Bad
+              </button>
+              -->
+        </div>
+    <div class="col-md-6 text-right">
+        <div class="small-space"></div>
+
+        <div class="igx-dialog__window-actions">
+
+            <button  type="button" igxButton igxRipple (click)="closeDialog()">
+                Close
+            </button>
+
+            <button type="submit"
+                [disabled]="!form.valid || form.pristine"
+                igxButton="raised" igxRipple="white">
+                {{ saveBttn }}
+            </button>
+
+        </div>
+    </div>
+    </div>
+
+
+
+
+</form>
