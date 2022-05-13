@@ -1,6 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {AgGridBaseComponent} from '../ag-grid-base/ag-grid-base.component';
 import {IServerDropdownOption} from '../../../../models/server-dropdown';
+import {DropdownComponent} from '../../../../shared/components/dropdown/dropdown.component';
 
 export interface IAgGridSearchFilterResult {
     newValue: string;
@@ -22,6 +23,8 @@ export class AgGridSearchFilterComponent {
     public qstype: string;
     public newValue: string;
 
+    @ViewChild(DropdownComponent) Dropdown: DropdownComponent;
+
     @Input() agGridBase: AgGridBaseComponent;
     @Input() qstypeOptions: IServerDropdownOption[];
 
@@ -42,6 +45,7 @@ export class AgGridSearchFilterComponent {
     }
 
     reset() {
+        this.Dropdown.initForm()
         this.qstype = null;
         this.newValue = null;
         this.onSearchFilter();
