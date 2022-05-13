@@ -26,6 +26,7 @@ import {FroalaEditorModule} from 'angular-froala-wysiwyg';
 import { ButtonToggleComponent } from './components/button-toggle/button-toggle.component';
 import { MatSelectAllComponent } from './components/mat-select-all/mat-select-all.component';
 import { OptionFilterPipe } from './pipes/option-filter.pipe';
+import {RxReactiveFormsModule} from '@rxweb/reactive-form-validators';
 
 const DIRECTIVES = [
     FormatPhoneNumberDirective,
@@ -36,7 +37,7 @@ const DIRECTIVES = [
 
 const PIPES = [
     EmailFilterPipe,
-    
+
 ];
 
 const COMPONENTS = [
@@ -67,7 +68,8 @@ const BASE_MODULES = [
 
 @NgModule({
     imports: [
-        ...BASE_MODULES
+        ...BASE_MODULES,
+        RxReactiveFormsModule
     ],
     declarations: [...DIRECTIVES, ...COMPONENTS, ...PIPES],
     exports: [...DIRECTIVES, ...COMPONENTS, ...BASE_MODULES, ...PIPES],

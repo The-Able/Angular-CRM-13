@@ -3,11 +3,12 @@
         <igx-input-group class="no-top-pad">
 
             <igx-prefix class="prefix__qstype-select" *ngIf="qstypeOptions">
-                <app-dropdown [(ngModel)]="qstype"
-                              name="qstype"
-                              placeholder="Select Field"
-                              (click)="$event.stopPropagation();"
-                              [options]="qstypeOptions">
+                <app-dropdown
+
+                    (optionSelected)="onDropDownSelect($event)"
+                    placeholder="Select Field"
+                    (click)="$event.stopPropagation();"
+                    [options]="qstypeOptions">
 
                 </app-dropdown>
             </igx-prefix>
@@ -16,7 +17,7 @@
                    appDebounceInput
                    placeholder="Search"
                    [(ngModel)]="newValue"
-                   name="quickFilterInput" type="text" />
+                   name="quickFilterInput" type="text"/>
 
             <igx-suffix>
                 <button type="button" igxButton="icon"

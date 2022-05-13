@@ -19,21 +19,26 @@ export interface OnSearchFilter {
 })
 export class AgGridSearchFilterComponent {
 
-    private qstype: string;
-    private newValue: string;
+    public qstype: string;
+    public newValue: string;
 
     @Input() agGridBase: AgGridBaseComponent;
     @Input() qstypeOptions: IServerDropdownOption[];
 
     onSearchFilter() {
         console.log(this.qstypeOptions)
-        console.log('ssssss',{newValue: this.newValue, qstype: this.qstype})
+        console.log('ssssss', {newValue: this.newValue, qstype: this.qstype})
         const filter = this.qstypeOptions.find(x => x.value === this.qstype);
         let text = '';
         if (filter) {
             text = filter.name;
         }
         this.agGridBase.onSearchFilterChanged({newValue: this.newValue, qstype: this.qstype, qtypeText: text});
+    }
+
+    onDropDownSelect(value: string) {
+        console.log(value);
+        this.qstype = value
     }
 
     reset() {

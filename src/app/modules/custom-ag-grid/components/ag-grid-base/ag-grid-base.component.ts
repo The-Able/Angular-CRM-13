@@ -1,4 +1,15 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import {catchError, takeWhile} from 'rxjs/operators';
 import {
     ColDef,
@@ -23,9 +34,9 @@ import {EmailsTooltipRenderer, FollowupInfo} from '../../render-functions/toolti
 import {IGridReloadPayload} from '../../../../models/grid-reload-payload';
 import {DataExportService} from '../../../../services/data-export.service';
 import {AgGridAngular} from 'ag-grid-angular';
-import { TemplateRendererComponent } from '../template-renderer/template-renderer.component';
-import { hexToRgb } from '../../../../helpers/utils';
-import { CustomTooltip } from '../basic-tooltip/basic-tooltip.component';
+import {TemplateRendererComponent} from '../template-renderer/template-renderer.component';
+import {hexToRgb} from '../../../../helpers/utils';
+import {CustomTooltip} from '../basic-tooltip/basic-tooltip.component';
 
 @Component({
     selector: 'app-ag-grid-base',
@@ -97,7 +108,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
     }
 
     onFirstDataRendered(event) {
-       // debugger
+        // debugger
         this.onBaseFirstDataRendered.emit(event);
     }
 
@@ -138,7 +149,11 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                 activeFilters = {};
             }
             if (activeFilters && activeFilters.qstype && activeFilters.qsearch && activeFilters.qtypeText) {
-                this.onSearchFilterChanged({newValue: activeFilters.qsearch, qstype: activeFilters.qstype, qtypeText: activeFilters.qtypeText});
+                this.onSearchFilterChanged({
+                    newValue: activeFilters.qsearch,
+                    qstype: activeFilters.qstype,
+                    qtypeText: activeFilters.qtypeText
+                });
             }
         }
 
@@ -166,7 +181,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
      * @param filterResult
      */
     onSearchFilterChanged(filterResult: IAgGridSearchFilterResult) {
-       // console.log('filterResult', filterResult)
+        // console.log('filterResult', filterResult)
 
         this.updateDataFetcherParam('qsearch', filterResult.newValue);
         this.updateDataFetcherParam('qstype', filterResult.qstype);
@@ -186,12 +201,12 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         if (!activeFilters) {
             activeFilters = {};
 
-        activeFilters.qsearch = filterResult.newValue;
-        activeFilters.qstype = filterResult.qstype;
-        activeFilters.qtypeText = filterResult.qtypeText;
-        activeFilters.gridGuid = this.gridGuid;
+            activeFilters.qsearch = filterResult.newValue;
+            activeFilters.qstype = filterResult.qstype;
+            activeFilters.qtypeText = filterResult.qtypeText;
+            activeFilters.gridGuid = this.gridGuid;
 
-        gridFilters.push(activeFilters);
+            gridFilters.push(activeFilters);
         } else {
             // We have an update
             activeFilters.qsearch = filterResult.newValue;
@@ -204,7 +219,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         // ===================Update Localstorage====================================
         // this.searchFilterChange.emit({ qsearch: filterResult.newValue, qstype: filterResult.qstype })
         this.onGridReload.emit(
-            {currentDataFetcherParams: { qsearch: filterResult.newValue, qstype: filterResult.qstype, qtypeText: filterResult.qtypeText }}
+            {currentDataFetcherParams: {qsearch: filterResult.newValue, qstype: filterResult.qstype, qtypeText: filterResult.qtypeText}}
         )
         // this.setDataSource();
     }
@@ -307,12 +322,12 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                     },
                 };
 
-                // case 'test':
-                //     return {
-                //         cellRenderer: (data) => {
-                //             console.log(data.value)
-                //             return data.value[0];                        },
-                //     };
+            // case 'test':
+            //     return {
+            //         cellRenderer: (data) => {
+            //             console.log(data.value)
+            //             return data.value[0];                        },
+            //     };
 
 
             case 'date':
@@ -343,49 +358,49 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                         }
                     },
                 };
-                case 'checkedFlag':
-                    return {
-                        cellRenderer: (data) => {
-                            if (data.value === true) {
-                                return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">done</i></span>';
-                            } else {
-                                return '<span></span>';
-                            }
-                        },
-                    };
+            case 'checkedFlag':
+                return {
+                    cellRenderer: (data) => {
+                        if (data.value === true) {
+                            return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">done</i></span>';
+                        } else {
+                            return '<span></span>';
+                        }
+                    },
+                };
 
-                case 'mls2' : {
-                        return {
-                                cellRendererFramework: TemplateRendererComponent,
-                                cellRendererParams: {
-                                ngTemplate: this.notifyTemp,
-                                tooltipRenderer: CustomTooltip ,
-                        },
+            case 'mls2' : {
+                return {
+                    cellRendererFramework: TemplateRendererComponent,
+                    cellRendererParams: {
+                        ngTemplate: this.notifyTemp,
+                        tooltipRenderer: CustomTooltip,
+                    },
                 }
-            };
+            }
+                ;
 
 
-
-                    case 'checkedFollowup':
-                        return {
-                            cellRenderer: (data) => {
-                                if (data.value && data.value !== '') {
-                                    return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">done</i></span>';
-                                } else {
-                                    return '<span></span>';
-                                }
-                            },
-                        };
-                case 'followupPrefix':
-                    return {
-                        cellRenderer: (data) => {
-                            if (data.value === 'contact') {
-                                return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">person</i></span>';
-                            } else {
-                                return '<span></span>';
-                            }
-                        },
-                    };
+            case 'checkedFollowup':
+                return {
+                    cellRenderer: (data) => {
+                        if (data.value && data.value !== '') {
+                            return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">done</i></span>';
+                        } else {
+                            return '<span></span>';
+                        }
+                    },
+                };
+            case 'followupPrefix':
+                return {
+                    cellRenderer: (data) => {
+                        if (data.value === 'contact') {
+                            return '<span class="table-row-icon"><i class="material-icons md-18" style="color:green">person</i></span>';
+                        } else {
+                            return '<span></span>';
+                        }
+                    },
+                };
             case 'multi-keyvalue':
                 return {
                     cellRendererFramework: MultiKeyValueItemRendererComponent,
@@ -394,39 +409,40 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                         tooltipRenderer: EmailsTooltipRenderer,
                     },
                 };
-                case 'time-info':
-                    return {
-                        cellRendererFramework: MultiKeyValueItemRendererComponent,
-                        cellRendererParams: {
-                            field: column.field,
-                            tooltipRenderer: FollowupInfo ,
-                        },
-                    };
-                case 'notify' :
-                    return {
-                        cellRendererFramework: TemplateRendererComponent,
-                        cellRendererParams: {
-                           ngTemplate: this.notifyTemp,
+            case 'time-info':
+                return {
+                    cellRendererFramework: MultiKeyValueItemRendererComponent,
+                    cellRendererParams: {
+                        field: column.field,
+                        tooltipRenderer: FollowupInfo,
+                    },
+                };
+            case 'notify' :
+                return {
+                    cellRendererFramework: TemplateRendererComponent,
+                    cellRendererParams: {
+                        ngTemplate: this.notifyTemp,
 
-                        }
-                    };
+                    }
+                };
 
-                    case 'mls' :
-                        return {
-                            cellRendererFramework: TemplateRendererComponent,
-                            cellRendererParams: {
-                               ngTemplate: this.notifyTemp,
-                               tooltipRenderer: FollowupInfo ,
+            case 'mls' :
+                return {
+                    cellRendererFramework: TemplateRendererComponent,
+                    cellRendererParams: {
+                        ngTemplate: this.notifyTemp,
+                        tooltipRenderer: FollowupInfo,
 
-                            }
-                        };
+                    }
+                };
 
-                case 'progress' :
-                    return { cellRenderer: (data) => {
+            case 'progress' :
+                return {
+                    cellRenderer: (data) => {
 
-                            const progress = data.value;
-                            const rgbC = hexToRgb(this.progressBG || this.progressBGDefault);
-                            const htmlString = `
+                        const progress = data.value;
+                        const rgbC = hexToRgb(this.progressBG || this.progressBGDefault);
+                        const htmlString = `
                                 <div class="cut-progress progress">
                                     <i>${progress.toFixed(2)}%</i>
                                     <div class="progress-bar" role="progressbar"
@@ -436,12 +452,12 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                                 </div>
                             `;
 
-                            return htmlString;
+                        return htmlString;
                     }
                 }
-                }
-
         }
+
+    }
 
     independentExport<T = any>(params: {
         export_data: Array<T>,
@@ -488,9 +504,9 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
     setDataSource(callback?: () => void) {
         const _that = this;
         const dataSource: IServerSideDatasource = {
-            getRows:  (params: IServerSideGetRowsParams) => {
+            getRows: (params: IServerSideGetRowsParams) => {
                 _that.previousRequestParams = params;
-                setTimeout( () => {
+                setTimeout(() => {
                     // Comment this out since it prevents grid from making multiple data requests at a time
                     /*if (_that.previousDataSubscription) {
                         _that.previousDataSubscription.unsubscribe();
@@ -567,7 +583,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         const colId = $event.columns[0].colId;
         // Reverse the selection
         const columnVisibility: boolean = !$event.columns[0].visible;
-        const column = this.columnsList.find(column => column.colId === colId);
+        const column = this.columnsList.find(col => col.colId === colId);
         if (column) {
             this.columnsService.toggleGridColumnVisibility(this.gridGuid, colId, columnVisibility)
                 .pipe(
@@ -608,6 +624,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
     onPaginationChanged($event: any) {
         // console.log($event);
     }
+
     changeNotify() {
         console.log('Change Notification')
     }
