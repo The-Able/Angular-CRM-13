@@ -1,6 +1,7 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {AgGridBaseComponent} from '../ag-grid-base/ag-grid-base.component';
 import {IServerDropdownOption} from '../../../../models/server-dropdown';
+import {DropdownComponent} from '../../../../shared/components/dropdown/dropdown.component';
 
 export interface IAgGridSearchFilterResult {
     newValue: string;
@@ -19,15 +20,17 @@ export interface OnSearchFilter {
 })
 export class AgGridSearchFilterComponent {
 
-    private qstype: string;
-    private newValue: string;
+    public qstype: string;
+    public newValue: string;
+
+    @ViewChild(DropdownComponent) Dropdown: DropdownComponent;
 
     @Input() agGridBase: AgGridBaseComponent;
     @Input() qstypeOptions: IServerDropdownOption[];
 
     onSearchFilter() {
         console.log(this.qstypeOptions)
-        console.log('ssssss',{newValue: this.newValue, qstype: this.qstype})
+        console.log('ssssss', {newValue: this.newValue, qstype: this.qstype})
         const filter = this.qstypeOptions.find(x => x.value === this.qstype);
         let text = '';
         if (filter) {
@@ -36,7 +39,13 @@ export class AgGridSearchFilterComponent {
         this.agGridBase.onSearchFilterChanged({newValue: this.newValue, qstype: this.qstype, qtypeText: text});
     }
 
+    onDropDownSelect(value: string) {
+        console.log(value);
+        this.qstype = value
+    }
+
     reset() {
+        this.Dropdown.initForm()
         this.qstype = null;
         this.newValue = null;
         this.onSearchFilter();

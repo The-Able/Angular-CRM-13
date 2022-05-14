@@ -19,6 +19,7 @@ import {AgGridBaseComponent} from './components/ag-grid-base/ag-grid-base.compon
 import {AgGridSearchFilterComponent} from './components/ag-grid-search-filter/ag-grid-search-filter.component';
 import {CurrencyPipe} from '@angular/common';
 import {TemplateRendererComponent} from './components/template-renderer/template-renderer.component';
+import {FormsModule} from '@angular/forms';
 
 const ENTRY_COMPONENTS = [
     HtmlRendererComponent,
@@ -55,6 +56,7 @@ const BASE_MODULES = [
         AgGridModule.withComponents([
             DateComponent,
             HeaderComponent,
+            FormsModule,
             HeaderGroupComponent,
             CustomTooltipComponent,
             TemplateRendererComponent,

@@ -1,9 +1,8 @@
 <form novalidate [formGroup]="form">
     <igx-select formControlName="selected"
-                (onSelection)="onInputChange($event.newSelection.value)"
+                (selectionchange)="onInputChange($event)"
                 (blur)="onTouched()"
-                
-                [placeholder]="placeholder && placeholder.length && placeholder">   
+                [placeholder]="placeholder && placeholder.length && placeholder">
         <igx-prefix *ngIf="prefix && prefix.length">{{prefix}}</igx-prefix>
         <label *ngIf="label && label.length" igxLabel>{{label}}</label>
         <igx-select-item *ngFor="let option of options" [value]="option.value">{{ option.name }}</igx-select-item>

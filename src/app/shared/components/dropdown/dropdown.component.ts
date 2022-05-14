@@ -35,7 +35,8 @@ export class DropdownComponent extends BaseControlValueAccessor<string> implemen
     @Input() prefix = '';
     @Input() isRequired = false;
 
-    @Output() optionSelected = new EventEmitter<IServerDropdownOption>();
+    @Output() optionSelected = new EventEmitter<string>();
+
     @Input() set options(options: IServerDropdownOption[]) {
         this._options = options;
         if (this.form) {
@@ -75,6 +76,10 @@ export class DropdownComponent extends BaseControlValueAccessor<string> implemen
         });
 
         this.selected.setValue(this.value);
+        this.form.valueChanges.subscribe((res) => {
+            this.onChange(res?.selected);
+            this.optionSelected.emit(res?.selected);
+        })
     }
 
     get selected() {
@@ -83,7 +88,7 @@ export class DropdownComponent extends BaseControlValueAccessor<string> implemen
 
     writeValue(value) {
         this.value = value;
-        this.selected && this.selected.setValue(this.value);
+        this.selected.setValue(this.value);
     }
 
     validate(c: FormControl) {
@@ -91,6 +96,7 @@ export class DropdownComponent extends BaseControlValueAccessor<string> implemen
     }
 
     onInputChange(value) {
+        console.log(value);
         this.onChange(value);
         this.optionSelected.emit(value);
     }
