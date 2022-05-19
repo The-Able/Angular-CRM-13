@@ -6,6 +6,7 @@ import {DropdownComponent} from '../../../../shared/components/dropdown/dropdown
 export interface IAgGridSearchFilterResult {
     newValue: string;
     qstype?: string;
+    qsearch?: string;
     qtypeText: string;
 }
 
@@ -36,6 +37,7 @@ export class AgGridSearchFilterComponent {
         if (filter) {
             text = filter.name;
         }
+        console.log('from here');
         this.agGridBase.onSearchFilterChanged({newValue: this.newValue, qstype: this.qstype, qtypeText: text});
     }
 

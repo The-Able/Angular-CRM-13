@@ -30,6 +30,7 @@ import {ownerOccupiedOptions} from '../../../../models/filters/owner-occupied-fi
 import {updateFilterOptions} from '../../../../models/filters/update-filter-options';
 import {FiltersSidebarContainerComponent} from '../../../../modules/filter/components/filters-sidebar/filters-sidebar-container.component';
 import {IActiveFilter} from '../../../../modules/filter/components/filter/filter.component';
+import {GridFiltersService} from '../../../../services/grid-filters.service';
 
 @Component({
     selector: 'app-farms-list-ag-grid',
@@ -73,6 +74,7 @@ export class FarmsListAgGridComponent implements OnInit, AfterViewInit, OnDestro
         private farmsService: FarmService,
         private cbLookupService: CouchbaseLookupService,
         private router: Router,
+        private gridFilterService: GridFiltersService,
         protected route: ActivatedRoute,
     ) {
         this.fetchColumnsList();
@@ -117,7 +119,6 @@ export class FarmsListAgGridComponent implements OnInit, AfterViewInit, OnDestro
                     }
                     // =========================Get Localstorage===============================
                     if (activeFilters) {
-                        console.log(activeFilters)
                         activeFilters.forEach(filter => {
                             if (filter.value) {
                                 filter.value.forEach(item => {
@@ -151,7 +152,7 @@ export class FarmsListAgGridComponent implements OnInit, AfterViewInit, OnDestro
                     setTimeout(() => {
                         gridOptions.api.selectIndex(storedFilters.rowIndex, false, false);
                         storedFilters.rowIndex = 0;
-                        localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
+                        this.gridFilterService.setFilter(gridFilters)
                     }, 2000);
 
                 }
@@ -220,7 +221,7 @@ export class FarmsListAgGridComponent implements OnInit, AfterViewInit, OnDestro
         } else {
             storedFilters.offset = this.agGridBase.previousRequestParams.request.startRow;
             storedFilters.rowIndex = params.rowIndex;
-            localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
+            this.gridFilterService.setFilter(gridFilters)
         }
         const state = {
             activeFilters: this.activeFilters,
@@ -273,7 +274,7 @@ export class FarmsListAgGridComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     private setActiveFilters(filters: IActiveFilter[]) {
-        console.log(filters)
+
         filters.forEach(filter => {
             const index = this.activeFilters.findIndex((item) => item.group === filter.group);
             if (index !== -1) {

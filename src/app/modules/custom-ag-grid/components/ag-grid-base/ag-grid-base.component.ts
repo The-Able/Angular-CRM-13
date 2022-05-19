@@ -37,6 +37,7 @@ import {AgGridAngular} from 'ag-grid-angular';
 import {TemplateRendererComponent} from '../template-renderer/template-renderer.component';
 import {hexToRgb} from '../../../../helpers/utils';
 import {CustomTooltip} from '../basic-tooltip/basic-tooltip.component';
+import {GridFiltersService} from '../../../../services/grid-filters.service';
 
 @Component({
     selector: 'app-ag-grid-base',
@@ -103,6 +104,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         private columnsService: GridColumnsService,
         private dataExportService: DataExportService,
         private currencyPipe: CurrencyPipe,
+        private gridFilterService: GridFiltersService
     ) {
         super();
     }
@@ -139,26 +141,9 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         };
 
 
-        // this.createColumnDefs();
-        // ===================Get Localstorage====================================
+        const filterResult = this.gridFilterService.getPreviousFilter()
 
-        const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
-        if (gridFilters) {
-            let activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid)
-            if (!activeFilters) {
-                activeFilters = {};
-            }
-            if (activeFilters && activeFilters.qstype && activeFilters.qsearch && activeFilters.qtypeText) {
-                this.onSearchFilterChanged({
-                    newValue: activeFilters.qsearch,
-                    qstype: activeFilters.qstype,
-                    qtypeText: activeFilters.qtypeText
-                });
-            }
-        }
-
-
-        // ===================Get Localstorage====================================
+        this.applyPreviousFilter(filterResult)
     }
 
     public onReady($event) {
@@ -180,41 +165,30 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
      * search filter component, exposes OnSearchFilter interface which base grid implements
      * @param filterResult
      */
+
+
+    applyPreviousFilter(filterResult: IAgGridSearchFilterResult) {
+        this.updateDataFetcherParam('qsearch', filterResult.qsearch);
+        this.updateDataFetcherParam('qstype', filterResult.qstype);
+        this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
+
+        this.onGridReload.emit(
+            {currentDataFetcherParams: {qsearch: filterResult.qsearch, qstype: filterResult.qstype, qtypeText: filterResult.qtypeText}}
+        )
+    }
+
     onSearchFilterChanged(filterResult: IAgGridSearchFilterResult) {
+
+        console.log(filterResult)
+
+        console.log({filterResult})
         // console.log('filterResult', filterResult)
 
         this.updateDataFetcherParam('qsearch', filterResult.newValue);
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
 
-        // ===================Update Localstorage====================================
-        let gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
-
-        if (!gridFilters || !gridFilters.length) {
-
-            gridFilters = [];
-        }
-
-
-        let activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
-
-        if (!activeFilters) {
-            activeFilters = {};
-
-            activeFilters.qsearch = filterResult.newValue;
-            activeFilters.qstype = filterResult.qstype;
-            activeFilters.qtypeText = filterResult.qtypeText;
-            activeFilters.gridGuid = this.gridGuid;
-
-            gridFilters.push(activeFilters);
-        } else {
-            // We have an update
-            activeFilters.qsearch = filterResult.newValue;
-            activeFilters.qstype = filterResult.qstype;
-            activeFilters.qtypeText = filterResult.qtypeText;
-        }
-        localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
-        // console.log(JSON.stringify(gridFilters))
+        this.gridFilterService.updateFilter(filterResult)
 
         // ===================Update Localstorage====================================
         // this.searchFilterChange.emit({ qsearch: filterResult.newValue, qstype: filterResult.qstype })

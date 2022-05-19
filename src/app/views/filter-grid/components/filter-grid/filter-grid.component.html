@@ -120,7 +120,7 @@
                                                     <button igxButton="flat"  igxRipple (click)="item.click(agGridBase)">
                                                         {{ item.label }}
 
-                                                       
+
                                                     </button>
                                                 </igx-drop-down-item>
 
@@ -138,7 +138,7 @@
                                         <div *ngIf="quickSelectShow">
                                             <button igxButton="raised" class="ml-0 button color-white font-16 filter-dropdown-btn"
                                                 [igxToggleAction]="dropdown1" [igxDropDownItemNavigation]="dropdown1">
-                                                {{ (quickSelectTitle)?quickSelectTitle:"Filter" }} 
+                                                {{ (quickSelectTitle)?quickSelectTitle:"Filter" }}
 
                                                 <igx-icon aria-hidden="true" class="material-icons igx-icon">arrow_drop_down</igx-icon>
                                             </button>
@@ -226,7 +226,7 @@
                             <!-- End New Drop Down Selection -->
                             <div class="col-md-4 m-auto d-flex align-items-center justify-content-end">
 
-                               
+
 
 
 
@@ -295,7 +295,7 @@
                                         </ng-container>
                                     </ng-container>
 
-                                    <ng-container *ngIf="agGridBase.getDataFetcherParams().qsearch; let searchFilter">
+                                    <ng-container *ngIf="agGridBase && agGridBase.getDataFetcherParams().qsearch; let searchFilter">
                                         <igx-chip id="qsearch" [removable]="true"
                                             (remove)="agGridSearchFilter.reset()">
                                             <span igxPrefix>qsearch:</span>

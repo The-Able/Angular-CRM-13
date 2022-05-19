@@ -42,7 +42,6 @@ export class ActionsRendererComponent implements AgRendererComponent {
     }
 
     onView(action: IGridAction) {
-        console.log('on view :', this.params.data[action.idField])
-        this.params.context.componentParent.onView(this.params);
+       this.params.context.componentParent.onView(this.params);
     }
 }

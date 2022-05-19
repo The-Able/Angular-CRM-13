@@ -5,7 +5,7 @@ import {ComponentCanDeactivate} from './component-can-deactivate';
 @Injectable()
 export class CanDeactivateGuard implements CanDeactivate<ComponentCanDeactivate> {
   canDeactivate(component: ComponentCanDeactivate): boolean {
-      console.log('can deactivate called');
+
 
     if (!component.canDeactivate()) {
         if (confirm(`You have unsaved changes! If you leave, your changes will be lost.`)) {
