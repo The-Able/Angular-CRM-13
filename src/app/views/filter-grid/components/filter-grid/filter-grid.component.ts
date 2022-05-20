@@ -547,6 +547,9 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
     }
 
     private setActiveFilters(filters: IActiveFilter[]) {
+
+        console.log('filters------------------------------------------------------------------------');
+        console.log(filters);
         filters.forEach(filter => {
             const index = this.activeFilters.findIndex((item) => item.group === filter.group);
             if (index !== -1) {
