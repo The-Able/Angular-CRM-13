@@ -144,6 +144,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
         if (gridFilters) {
+            console.log('AG Grid Base Apply Quick Filters')
             let activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid)
             if (!activeFilters) {
                 activeFilters = {};
@@ -182,6 +183,8 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
      */
     onSearchFilterChanged(filterResult: IAgGridSearchFilterResult) {
         // console.log('filterResult', filterResult)
+
+        console.log('AG Grid Base Search Filter Changed')
 
         this.updateDataFetcherParam('qsearch', filterResult.newValue);
         this.updateDataFetcherParam('qstype', filterResult.qstype);

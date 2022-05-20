@@ -405,12 +405,16 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         setTimeout(() => {
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
+                console.log('We have no Grid Filters Filter Grid baseGridLoaded')
                 gridFilters = [];
             }
 
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.qstype && storedFilters.qstype !== '') {
                 // We have stored QuickSelect Info
+
+                console.log('we have QSearch Filters Filter Grid baseGridLoaded')
+                console.log(storedFilters)
 
                 const qstype = storedFilters.qstype
                 let qsearch = storedFilters.qsearch
@@ -463,20 +467,24 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             const state = window.history.state;
             // const activeFilters: IActiveFilter[] = state.activeFilters;
             let activeFilters: IActiveFilter[];
-
+            console.log('Current Active Filters')
             console.log(state.activeFilters)
 
             // =========================Get Localstorage===============================
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
                 gridFilters = [];
+                console.log('BaseGridReady No GridFilters baseGridReady Filter Grid')
             }
+            console.log('BaseGridReady Filter Grid we have Filters')
             console.log(gridFilters)
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.activeFilters) {
+                ('BaseGridReady Filter Grid using stored Filters')
                 activeFilters = storedFilters.activeFilters;
             } else {
                 activeFilters = state.activeFilters;
+                ('BaseGridReady Filter Grid using StateFilters')
             }
             // =========================Get Localstorage===============================
             if (activeFilters) {
@@ -500,7 +508,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
     // filters
     private applyFilterDefault() {
-
+        ('applyFilterDefault Filter Grid')
         const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
         if (gridFilters && gridFilters.length > 0) {
             const activeFilters = [];
