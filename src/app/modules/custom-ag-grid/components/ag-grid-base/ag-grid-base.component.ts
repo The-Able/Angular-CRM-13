@@ -143,7 +143,10 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         const filterResult = this.gridFilterService.getPreviousFilter()
 
-        this.applyPreviousFilter(filterResult)
+        setTimeout(() => {
+            console.log('Stared Actual Query');
+            this.applyPreviousFilter(filterResult)
+        }, 5000)
     }
 
     public onReady($event) {
