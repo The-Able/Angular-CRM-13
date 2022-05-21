@@ -143,10 +143,31 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         const filterResult = this.gridFilterService.getPreviousFilter()
 
+
         setTimeout(() => {
             console.log('Stared Actual Query');
             this.applyPreviousFilter(filterResult)
         }, 5000)
+
+        const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
+        if (gridFilters) {
+            console.log('AG Grid Base Apply Quick Filters')
+            let activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid)
+            if (!activeFilters) {
+                activeFilters = {};
+            }
+            if (activeFilters && activeFilters.qstype && activeFilters.qsearch && activeFilters.qtypeText) {
+                this.onSearchFilterChanged({
+                    newValue: activeFilters.qsearch,
+                    qstype: activeFilters.qstype,
+                    qtypeText: activeFilters.qtypeText
+                });
+            }
+        }
+
+
+        // ===================Get Localstorage====================================
+
     }
 
     public onReady($event) {
@@ -170,8 +191,14 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
      */
 
 
+
     applyPreviousFilter(filterResult: IAgGridSearchFilterResult) {
         this.updateDataFetcherParam('qsearch', filterResult.qsearch);
+
+        console.log('AG Grid Base Search Filter Changed')
+
+        this.updateDataFetcherParam('qsearch', filterResult.newValue);
+
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
 

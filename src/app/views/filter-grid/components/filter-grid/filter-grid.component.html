@@ -316,14 +316,22 @@
 
                         <div class="row">
                             <div #agGridContainer class="col-md-12 pr-0 mt-3">
-                                <app-ag-grid-base #agGridBase [isInfiniteScrollGrid]="true" [columnsList]="columnsList"
-                                    [supplementaryColumnDefs]="supplementaryColumns" theme="ag-theme-material"
-                                    (onGridReload)="onGridReload($event)" [dataFetcherFactory]="dataFetcherFactory"
-                                    [sideBar]="showSideBar" (onViewAction)="onView($event.DocId)"
-                                    (onGridReady)="baseGridReady($event)" [gridGuid]="gridGuid"
-                                    [gridHeight]="gridHeight || calcGridHeight" [gridWidth]="gridWidth"
-                                    [progressBG]="progressBG" [notifyTemp]="notifyTemp"
-                                    (onGridLoaded)="baseGridLoaded($event)" (onGridDataLoaded)="allDataLoaded()"
+                                <app-ag-grid-base #agGridBase [isInfiniteScrollGrid]="true" 
+                                    [columnsList]="columnsList"
+                                    [supplementaryColumnDefs]="supplementaryColumns" 
+                                    theme="ag-theme-material"
+                                    (onGridReload)="onGridReload($event)" 
+                                    [dataFetcherFactory]="dataFetcherFactory"
+                                    [sideBar]="showSideBar" 
+                                    (onViewAction)="onView($event.DocId)"
+                                    (onGridReady)="baseGridReady($event)" 
+                                    [gridGuid]="gridGuid"
+                                    [gridHeight]="gridHeight || calcGridHeight" 
+                                    [gridWidth]="gridWidth"
+                                    [progressBG]="progressBG" 
+                                    [notifyTemp]="notifyTemp"
+                                    (onGridLoaded)="baseGridLoaded($event)" 
+                                    (onGridDataLoaded)="allDataLoaded()"
                                     (onFirstDataRendered)="baseFirstDataRendered($event)">
 
                                 </app-ag-grid-base>
