@@ -8,7 +8,6 @@ export abstract class FormCanDeactivate extends ComponentCanDeactivate {
  abstract get form(): FormGroup;
 
  canDeactivate(): boolean {
-     console.log('form is dirty ', this.form.dirty);
       return !this.form.dirty;
   }
 }

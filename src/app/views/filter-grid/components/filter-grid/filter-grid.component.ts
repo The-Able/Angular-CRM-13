@@ -38,6 +38,7 @@ import { CouchbaseLookupService } from '../../../../services/couchbase-lookup.se
 import { FormControl } from '@angular/forms';
 
 import * as moment from 'moment';
+import {GridFiltersService} from '../../../../services/grid-filters.service';
 
 
 
@@ -209,6 +210,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
     constructor(
         private filterGridService: FilterGridService,
+        private gridFilterService: GridFiltersService,
         private elementRef: ElementRef,
         public dialog: MatDialog,
         private gridColumnsService: GridColumnsService,
@@ -447,7 +449,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
                     setTimeout(() => {
                         gridOptions.api.selectIndex(storedFilters.rowIndex, false, false);
                         storedFilters.rowIndex = 0;
-                        localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
+                        this.gridFilterService.setFilter(gridFilters)
                     }, 2000);
 
                 }
@@ -467,8 +469,11 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             const state = window.history.state;
             // const activeFilters: IActiveFilter[] = state.activeFilters;
             let activeFilters: IActiveFilter[];
+
+
             console.log('Current Active Filters')
             console.log(state.activeFilters)
+
 
             // =========================Get Localstorage===============================
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
@@ -555,6 +560,9 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
     }
 
     private setActiveFilters(filters: IActiveFilter[]) {
+
+        console.log('filters------------------------------------------------------------------------');
+        console.log(filters);
         filters.forEach(filter => {
             const index = this.activeFilters.findIndex((item) => item.group === filter.group);
             if (index !== -1) {

@@ -39,7 +39,6 @@ export class User {
   user_name?: string;
 
   constructor (user) {
-    console.log(user)
     this.admin = user.admin === 1;
     this.alternate_phone = user.alternate_phone;
     this.cell_phone = user.cell_phone;

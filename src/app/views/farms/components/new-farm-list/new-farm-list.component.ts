@@ -4,8 +4,9 @@ import {FarmService} from '../../../../services/farm/farm.service';
 import {Router} from '@angular/router';
 import {BucketEditComponent} from '../../../buckets/components/bucket-edit/bucket-edit.component';
 import {MatDialog} from '@angular/material/dialog';
-import { DropdownGuids } from '../../../../models/dropdown-guids.enum';
-import { FilterGridComponent } from '../../../filter-grid/components/filter-grid/filter-grid.component';
+import {DropdownGuids} from '../../../../models/dropdown-guids.enum';
+import {FilterGridComponent} from '../../../filter-grid/components/filter-grid/filter-grid.component';
+import {GridFiltersService} from '../../../../services/grid-filters.service';
 
 @Component({
     selector: 'app-new-farm-list',
@@ -13,7 +14,7 @@ import { FilterGridComponent } from '../../../filter-grid/components/filter-grid
     styleUrls: ['./new-farm-list.component.css']
 })
 export class NewFarmListsComponent {
-    gridtitle: String = "";
+    gridtitle: String = '';
     hideSelectOption = false;
     hideHiddenDisplay = false;
     showloading = false;
@@ -72,11 +73,12 @@ export class NewFarmListsComponent {
         return (param) => this.farmsService.fetchExportData(param);
     }
 
-    constructor(private farmsService: FarmService, 
-        private router: Router, 
-        private dialog: MatDialog
-        ) {
-            
+    constructor(private farmsService: FarmService,
+                private router: Router,
+                private dialog: MatDialog,
+                private gridFilterService: GridFiltersService
+    ) {
+
     }
 
     handleView(data, params: any) {
@@ -86,7 +88,7 @@ export class NewFarmListsComponent {
             const activeFilters = [];
             if (gridFilters.length && gridFilters.find(x => x.gridGuid === GridColumnsListGuids.FARM_GRID)) {
                 gridFilters.find(x => x.gridGuid === GridColumnsListGuids.FARM_GRID).rowIndex = params.rowIndex;
-                localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
+                this.gridFilterService.setFilter(gridFilters)
             }
         }
 
