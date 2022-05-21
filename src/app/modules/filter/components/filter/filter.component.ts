@@ -36,6 +36,8 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
 
     changeFilter: BehaviorSubject<IActiveFilter>;
 
+    isReload = 0;
+
     @Input() set filters(filters: IServerDropdownOption[]) {
         this._filters = filters && filters.length ? [...filters] : [];
     }
@@ -43,14 +45,12 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
     constructor( private gridFilterService: GridFiltersService) {
     }
 
-    isReload: number = 0;
-
     get filters() {
         return this._filters;
     }
 
     ngOnInit() {
-        var pageType;
+        let pageType;
         if (window.performance.getEntriesByType('navigation')) {
             pageType = window.performance.getEntriesByType('navigation')[0];
             if (pageType.type == 'navigate' || pageType.type == 'reload' || pageType.type == 'back_forward') {
@@ -121,8 +121,6 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
             gridFilters = [];
         }
         let storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
-
-
         if (storedFilters && storedFilters.activeFilters) {
             let group = storedFilters.activeFilters.find(x => x.group.toLowerCase() === this.changeFilter.value.group.toLowerCase());
             if (group) {
@@ -131,7 +129,7 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
 
                 if (filter.type.toLowerCase() === 'multi') {
                     console.log('Group Multi : ' + JSON.stringify(group.value))
-                    var data = group.value.filter(obj => obj.value !== filter.value);
+                    let data = group.value.filter(obj => obj.value !== filter.value);
                     let i = 0;
                     group.value = [];
                     while (i < data.length) {
@@ -169,7 +167,16 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
             ActiveFilter.push({value: value, group: this.changeFilter.value.group});
             storedFilters = {activeFilters: ActiveFilter};
             storedFilters.gridGuid = this.gridGuid;
-            gridFilters.push(storedFilters)
+            if ( gridFilters.length) {
+                if (gridFilters[0].activeFilters) {
+                    gridFilters[0].activeFilters.push(ActiveFilter)
+                } else {
+                    gridFilters[0]['activeFilters'] = ActiveFilter
+                    gridFilters[0]['gridGuid'] = this.gridGuid;
+                }
+            } else {
+                gridFilters.push(storedFilters)
+            }
         }
 
         this.gridFilterService.setFilter(gridFilters)

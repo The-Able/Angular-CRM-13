@@ -91,7 +91,7 @@ export class FilterGridTest1Component {
         this.router.navigateByUrl(`/Farm/FarmMaster/${data.DocId}`, {
             state,
         });
- 
+
     }
 
     handleEdit(data, params) {

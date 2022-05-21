@@ -518,17 +518,21 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         if (gridFilters && gridFilters.length > 0) {
             const activeFilters = [];
             if (gridFilters.length && gridFilters.find(x => x.gridGuid === this.gridGuid)) {
-                gridFilters.find(x => x.gridGuid === this.gridGuid).activeFilters.map(x => {
-                    if (x.value[0].selected === true) {
-                        const filter: any = this.filters.find(c => c.group === x.group)
-                        if (filter) {
-                            filter.filters.map(b => {
-                                b.selected = false;
-                            })// uncheck all options for filter
-                            filter.filters.find(v => v.name === x.value[0].name).selected = true;
+                const filteredGrid = gridFilters.find(x => x.gridGuid === this.gridGuid);
+                if(filteredGrid.activeFilters) {
+                    filteredGrid.activeFilters.map(x => {
+                        if (x.value[0].selected === true) {
+                            const filter: any = this.filters.find(c => c.group === x.group)
+                            if (filter) {
+                                filter.filters.map(b => {
+                                    b.selected = false;
+                                })// uncheck all options for filter
+                                filter.filters.find(v => v.name === x.value[0].name).selected = true;
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         }
 
@@ -662,7 +666,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         this.reloadingNow = this.showLoading;
         this.setDataFetcherFactory($event.currentDataFetcherParams);
         console.log($event.currentDataFetcherParams)
-        this.agGridBase.setDataSource(() => {
+        this?.agGridBase?.setDataSource(() => {
         });
     }
 

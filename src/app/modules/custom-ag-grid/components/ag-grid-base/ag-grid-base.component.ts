@@ -144,10 +144,10 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         const filterResult = this.gridFilterService.getPreviousFilter()
 
 
-        setTimeout(() => {
-            console.log('Stared Actual Query');
-            this.applyPreviousFilter(filterResult)
-        }, 5000)
+        // setTimeout(() => {
+        //     console.log('Stared Actual Query');
+        //     this.applyPreviousFilter(filterResult)
+        // }, 5000)
 
         const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
         if (gridFilters) {
@@ -197,7 +197,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         console.log('AG Grid Base Search Filter Changed')
 
-        this.updateDataFetcherParam('qsearch', filterResult.newValue);
+        // this.updateDataFetcherParam('qsearch', filterResult.newValue);
 
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);

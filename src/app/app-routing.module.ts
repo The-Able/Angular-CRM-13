@@ -1,30 +1,30 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { HomeComponent } from "./components/home/home.component";
-import { DocsLayoutComponent } from "./components/index/docs-layout.component";
-import { IndexComponent } from "./components/index/index.component";
-import { AuthGuard } from "./guards/auth.guard";
-import { LoginComponent } from "./views/appviews/login/login.component";
-import { LogoutComponent } from "./views/appviews/logout/logout.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
+import { DocsLayoutComponent } from './components/index/docs-layout.component';
+import { IndexComponent } from './components/index/index.component';
+import { AuthGuard } from './guards/auth.guard';
+import { LoginComponent } from './views/appviews/login/login.component';
+import { LogoutComponent } from './views/appviews/logout/logout.component';
 
 export const appRoutes: Routes = [
     // Main redirect
-    { path: "", redirectTo: "home", pathMatch: "full" },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
 
     {
-        path: "",
+        path: '',
         component: IndexComponent,
         canActivate: [AuthGuard],
         children: [
             {
                 component: HomeComponent,
-                data: { displayName: "Home" },
-                path: "home",
+                data: { displayName: 'Home' },
+                path: 'home',
             },
             {
                 component: LogoutComponent,
-                data: { displayName: "Logout" },
-                path: "Logout",
+                data: { displayName: 'Logout' },
+                path: 'Logout',
             },
             /*{
                 path: 'Leads', component: DocsLayoutComponent,
@@ -48,75 +48,75 @@ export const appRoutes: Routes = [
                 ]
             },*/
             {
-                path: "Leads",
+                path: 'Leads',
                 canActivate: [AuthGuard],
                 loadChildren: () =>
-                    import("src/app/views/leads/lead.module").then(
+                    import('src/app/views/leads/lead.module').then(
                         (m) => m.LeadModule
                     ),
             },
 
             {
-                path: "Farm",
+                path: 'Farm',
                 loadChildren: () =>
-                    import("src/app/views/farms/farms.module").then(
+                    import('src/app/views/farms/farms.module').then(
                         (m) => m.FarmsModule
                     ),
             },
             {
-                path: "Vendor",
+                path: 'Vendor',
                 loadChildren: () =>
-                    import("src/app/views/vendor/vendor.module").then(
+                    import('src/app/views/vendor/vendor.module').then(
                         (m) => m.VendorModule
                     ),
             },
             {
-                path: "DocLibrary",
+                path: 'DocLibrary',
                 loadChildren: () =>
-                    import("src/app/views/doc-library/doc-library.module").then(
+                    import('src/app/views/doc-library/doc-library.module').then(
                         (m) => m.DocLibraryModule
                     ),
             },
             {
-                path: "Emails",
+                path: 'Emails',
                 loadChildren: () =>
-                    import("src/app/views/mail/mail.module").then(
+                    import('src/app/views/mail/mail.module').then(
                         (m) => m.MailModule
                     ),
             },
             {
-                path: "Contacts",
+                path: 'Contacts',
                 loadChildren: () =>
-                    import("src/app/views/contacts/contacts.module").then(
+                    import('src/app/views/contacts/contacts.module').then(
                         (m) => m.ContactsModule
                     ),
             },
             {
-                path: "MyStuff",
+                path: 'MyStuff',
                 loadChildren: () =>
-                    import("src/app/views/my-stuff/my-stuff.module").then(
+                    import('src/app/views/my-stuff/my-stuff.module').then(
                         (m) => m.MyStuffModule
                     ),
             },
             {
-                path: "Setup",
+                path: 'Setup',
                 loadChildren: () =>
-                    import("src/app/views/buckets/bucket.module").then(
+                    import('src/app/views/buckets/bucket.module').then(
                         (m) => m.BucketModule
                     ),
             },
         ],
     },
     {
-        path: "auth",
+        path: 'auth',
         component: DocsLayoutComponent,
         children: [
             {
-                path: "",
+                path: '',
                 component: LoginComponent,
             },
             {
-                path: "login",
+                path: 'login',
                 component: LoginComponent,
             },
         ],
@@ -138,14 +138,14 @@ export const appRoutes: Routes = [
     // },
 
     // Handle all other routes
-    { path: "**", redirectTo: "/home" },
+    { path: '**', redirectTo: '/home' },
 ];
 
 @NgModule({
     exports: [RouterModule],
     imports: [
         RouterModule.forRoot(appRoutes, {
-            onSameUrlNavigation: "reload",
+            onSameUrlNavigation: 'reload',
         }),
     ],
 })
