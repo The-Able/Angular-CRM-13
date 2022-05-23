@@ -458,6 +458,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             }
 
             if (storedFilters && storedFilters.activeFilters) {
+                console.log('Callong a store Filters in filter-grid line 461')
                 if (storedFilters.rowIndex) {
                     gridOptions.api.ensureIndexVisible(storedFilters.rowIndex, 'middle');
                     setTimeout(() => {
