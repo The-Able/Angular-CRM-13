@@ -603,7 +603,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             });
 
             this.setDataFetcherFactory();
-            // this.agGridBase.setDataSource();
+            this.agGridBase.setDataSource();
         }
     }
 
