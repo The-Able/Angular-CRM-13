@@ -12,10 +12,9 @@ export class CouchbaseLookupService {
   constructor(private api: ApiService) { }
 
     getOptions(guid: string): Observable<IServerDropdownOption[]> {
-        console.log('Lookup ID: ' +guid)
-        return this.api.get({endpoint: `/cblookup/${guid}`, useAuthUrl: true})
+        console.log('Lookup ID: ' + guid)
+        const resp =  this.api.get({endpoint: `/cblookup/${guid}`, useAuthUrl: true})
             .pipe(
-              
                 map((res: any) => {
                     return res.Data.map(option => {
                         return {
@@ -27,5 +26,6 @@ export class CouchbaseLookupService {
                 }),
                 tap(res => console.log(res)),
             );
+        return resp;
     }
 }
