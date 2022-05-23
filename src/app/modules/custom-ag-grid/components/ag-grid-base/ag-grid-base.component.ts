@@ -141,7 +141,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         };
 
 
-        const filterResult = this.gridFilterService.getPreviousFilter()
+        const filterResult = this.gridFilterService.getPreviousFilter(this.gridGuid)
 
 
         // setTimeout(() => {
@@ -218,7 +218,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
 
-        this.gridFilterService.updateFilter(filterResult)
+        this.gridFilterService.updateFilter(filterResult, this.gridGuid)
 
         // ===================Update Localstorage====================================
         // this.searchFilterChange.emit({ qsearch: filterResult.newValue, qstype: filterResult.qstype })

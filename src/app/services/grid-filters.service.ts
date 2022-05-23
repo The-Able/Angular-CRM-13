@@ -8,14 +8,13 @@ import {IAgGridSearchFilterResult} from '../modules/custom-ag-grid/components/ag
 
 export class GridFiltersService {
 
-    gridGuid = GridColumnsListGuids.FARM_GRID;
     constructor() {
     }
 
     setFilter(gridFilters) {
         localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
     }
-    updateFilter(filterResult: IAgGridSearchFilterResult) {
+    updateFilter(filterResult: IAgGridSearchFilterResult, gridGuid: string) {
         // ===================Update Localstorage====================================
         let gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
 
@@ -25,7 +24,7 @@ export class GridFiltersService {
         }
 
 
-        let activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
+        let activeFilters: any = gridFilters.find(x => x.gridGuid === gridGuid);
         console.log(activeFilters);
 
         if (!activeFilters) {
@@ -33,7 +32,7 @@ export class GridFiltersService {
             activeFilters.qsearch = filterResult.newValue;
             activeFilters.qstype = filterResult.qstype;
             activeFilters.qtypeText = filterResult.qtypeText;
-            activeFilters.gridGuid = this.gridGuid;
+            activeFilters.gridGuid = gridGuid;
             gridFilters.push(activeFilters);
         } else {
             // We have an update
@@ -44,10 +43,10 @@ export class GridFiltersService {
         localStorage.setItem('gridFilters', JSON.stringify(gridFilters));
     }
 
-    getPreviousFilter(): IAgGridSearchFilterResult {
+    getPreviousFilter(gridGuid : string): IAgGridSearchFilterResult {
         const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
         if (gridFilters) {
-            const activeFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid)
+            const activeFilters: any = gridFilters.find(x => x.gridGuid === gridGuid)
             if (activeFilters) {
                 return activeFilters
             }
