@@ -178,9 +178,10 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         // this.calculateRowCount();
         this.onGridReady.emit(this.gridOptions);
-        this.setDataSource(() => {
-            this.onGridLoaded.emit(this.gridOptions);
-        });
+        // debugger
+        // this.setDataSource(() => {
+        //     this.onGridLoaded.emit(this.gridOptions);
+        // });
 
     }
 
