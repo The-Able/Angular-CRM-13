@@ -141,13 +141,13 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         };
 
 
-        const filterResult = this.gridFilterService.getPreviousFilter()
+        const filterResult = this.gridFilterService.getPreviousFilter(this.gridGuid)
 
 
-        setTimeout(() => {
-            console.log('Stared Actual Query');
-            this.applyPreviousFilter(filterResult)
-        }, 5000)
+        // setTimeout(() => {
+        //     console.log('Stared Actual Query');
+        //     this.applyPreviousFilter(filterResult)
+        // }, 5000)
 
         const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
         if (gridFilters) {
@@ -197,7 +197,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
 
         console.log('AG Grid Base Search Filter Changed')
 
-        this.updateDataFetcherParam('qsearch', filterResult.newValue);
+        // this.updateDataFetcherParam('qsearch', filterResult.newValue);
 
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
@@ -218,7 +218,7 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
         this.updateDataFetcherParam('qstype', filterResult.qstype);
         this.updateDataFetcherParam('qtypeText', filterResult.qtypeText);
 
-        this.gridFilterService.updateFilter(filterResult)
+        this.gridFilterService.updateFilter(filterResult, this.gridGuid)
 
         // ===================Update Localstorage====================================
         // this.searchFilterChange.emit({ qsearch: filterResult.newValue, qstype: filterResult.qstype })
@@ -269,11 +269,11 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                     const displayedColumns = params.columnApi.getAllDisplayedColumns();
                     return displayedColumns[0] === params.column;
                 },
-                headerCheckboxSelection: function (params) {
-                    const displayedColumns = params.columnApi.getAllDisplayedColumns();
-                    // console.log(displayedColumns[0] === params.column);
-                    return displayedColumns[0] === params.column;
-                },
+                // headerCheckboxSelection: function (params) {
+                //     const displayedColumns = params.columnApi.getAllDisplayedColumns();
+                //     // console.log(displayedColumns[0] === params.column);
+                //     return displayedColumns[0] === params.column;
+                // },
                 headerCheckboxSelectionFilteredOnly: true,
                 ...(column.type && {
                     ...(Array.isArray(column.type)

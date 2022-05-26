@@ -3,8 +3,9 @@ import {AgGridBaseComponent} from '../ag-grid-base/ag-grid-base.component';
 import {IServerDropdownOption} from '../../../../models/server-dropdown';
 import {DropdownComponent} from '../../../../shared/components/dropdown/dropdown.component';
 
+
 export interface IAgGridSearchFilterResult {
-    newValue: string;
+    newValue?: string;
     qstype?: string;
     qsearch?: string;
     qtypeText: string;
@@ -29,20 +30,25 @@ export class AgGridSearchFilterComponent {
     @Input() agGridBase: AgGridBaseComponent;
     @Input() qstypeOptions: IServerDropdownOption[];
 
+    constructor(
+
+      
+    ) {
+        
+    }
+
     onSearchFilter() {
-        console.log(this.qstypeOptions)
-        console.log('ssssss', {newValue: this.newValue, qstype: this.qstype})
+
+        console.log({newValue: this.newValue, qstype: this.qstype})
         const filter = this.qstypeOptions.find(x => x.value === this.qstype);
         let text = '';
         if (filter) {
             text = filter.name;
         }
-        console.log('from here');
         this.agGridBase.onSearchFilterChanged({newValue: this.newValue, qstype: this.qstype, qtypeText: text});
     }
 
     onDropDownSelect(value: string) {
-        console.log(value);
         this.qstype = value
     }
 

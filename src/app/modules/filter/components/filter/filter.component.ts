@@ -36,6 +36,8 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
 
     changeFilter: BehaviorSubject<IActiveFilter>;
 
+    isReload = 0;
+
     @Input() set filters(filters: IServerDropdownOption[]) {
         this._filters = filters && filters.length ? [...filters] : [];
     }
@@ -43,14 +45,12 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
     constructor( private gridFilterService: GridFiltersService) {
     }
 
-    isReload: number = 0;
-
     get filters() {
         return this._filters;
     }
 
     ngOnInit() {
-        var pageType;
+        let pageType;
         if (window.performance.getEntriesByType('navigation')) {
             pageType = window.performance.getEntriesByType('navigation')[0];
             if (pageType.type == 'navigate' || pageType.type == 'reload' || pageType.type == 'back_forward') {
@@ -117,21 +117,21 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
         }
         // =============================Update localstorage=================================
         let gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
+
+        // Check if there is an a gridFilter in Local Store, if not create am empty Array
         if (!gridFilters || !gridFilters.length) {
             gridFilters = [];
         }
         let storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
-
-
+        // Check if we have active filters for the provided GUID
         if (storedFilters && storedFilters.activeFilters) {
             let group = storedFilters.activeFilters.find(x => x.group.toLowerCase() === this.changeFilter.value.group.toLowerCase());
+            // Check if we have a value for this filter Group
             if (group) {
-
-                console.log('Is reload : ' + this.isReload)
-
+                // The filter Group is present in the Object
                 if (filter.type.toLowerCase() === 'multi') {
-                    console.log('Group Multi : ' + JSON.stringify(group.value))
-                    var data = group.value.filter(obj => obj.value !== filter.value);
+                    // This is a multis selection filter
+                    let data = group.value.filter(obj => obj.value !== filter.value);
                     let i = 0;
                     group.value = [];
                     while (i < data.length) {
@@ -142,13 +142,11 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
 
                     if (filter.selected !== false) {
 
-
-                        console.log('Should add filter : ' + filter.selected)
-                        console.log(filter)
                         group.value.push(filter);
                     }
                 } else {
-                    console.log('Group Single : ' + JSON.stringify(group))
+                    // This is a single selection Filter
+                    // TODO: Cleanup to remove any Single value that is not selected from local store
                     group.value = [];
                     group.value.push(filter);
 
@@ -156,6 +154,7 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
 
 
             } else {
+                // The Filter Group is not present in the Local store and we need to create one
                 group = {value: [], group: ''};
                 group.value = [];
                 group.group = this.changeFilter.value.group
@@ -163,15 +162,28 @@ export class FilterComponent implements OnInit, OnDestroy, OnChanges {
                 storedFilters.activeFilters.push(group);
             }
         } else {
+            // There is no Filter in the Local store for the GUID
             const ActiveFilter: IActiveFilter[] = [];
             const value: IServerDropdownOption[] = [];
             value.push(filter);
             ActiveFilter.push({value: value, group: this.changeFilter.value.group});
             storedFilters = {activeFilters: ActiveFilter};
             storedFilters.gridGuid = this.gridGuid;
+            // if ( gridFilters.length) {
+            //     if (gridFilters[0].activeFilters) {
+            //         gridFilters[0].activeFilters.push(ActiveFilter)
+            //     } else {
+            //         gridFilters[0]['activeFilters'] = ActiveFilter
+            //         gridFilters[0]['gridGuid'] = this.gridGuid;
+            //     }
+            // } else {
+            //     gridFilters.push(storedFilters)
+            // }
+
             gridFilters.push(storedFilters)
         }
 
+        console.log(storedFilters)
         this.gridFilterService.setFilter(gridFilters)
         // =============================Update localstorage=================================
     }

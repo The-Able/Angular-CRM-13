@@ -303,7 +303,17 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
 
     runFilterQuery(qsearch: string , qstype: string, qtypeText: string) {
-        this.agGridBase.onSearchFilterChanged({ newValue: qsearch, qstype: qstype, qtypeText: qtypeText });
+        // this.agGridBase.onSearchFilterChanged({ newValue: qsearch, qstype: qstype, qtypeText: qtypeText });
+
+        this.agGridBase.updateDataFetcherParam('qsearch', qsearch);
+        this.agGridBase.updateDataFetcherParam('qstype', qstype);
+        this.agGridBase.updateDataFetcherParam('qtypeText', qtypeText);
+
+        this.gridFilterService.updateFilter({ qsearch: qsearch, qstype: qstype, qtypeText: qtypeText }, this.gridGuid)
+
+        this.agGridBase.onGridReload.emit(
+            {currentDataFetcherParams: {qsearch: qsearch, qstype: qstype, qtypeText: qtypeText }}
+        )
     }
 
 
@@ -341,29 +351,33 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         } else {
             this.filters = []
         }
+        // initialize quick search
+        if (!this.quickSearchTypeOptions) {
+        
 
+            this.filterGridService.getQuickSearchTypeOptions(this.quickSearchTypeOptionConfigId)
+                .subscribe(reply => {
+                    this.quickSearchTypeOptions = reply;
+                });
+        }
         // initialize columns
         if (!this.columns || (this.columns && this.hardReload)) {
             this.filterGridService.getColumnConfig(this.columnConfigId)
                 .subscribe(reply => {
-                    this.columns = reply;
-                    this.postConfig();
+                        this.columns = reply;
+                    setTimeout(() => {
+                        this.postConfig();
+                    }, 500)
                 });
         }
 
-        // initialize quick search
-        if (!this.quickSearchTypeOptions) {
-            this.filterGridService.getQuickSearchTypeOptions(this.quickSearchTypeOptionConfigId)
-                .subscribe(reply => {
-                    this.quickSearchTypeOptions = reply;
-                                   });
-        }
+
 
     }
 
     private postConfig() {
         this.isGridLoaded = true;
-        if (!this.columns || (!this.filters) || !this.quickSearchTypeOptions) {
+          if (!this.columns || (!this.filters) || !this.quickSearchTypeOptions) {
             return;
         }
 
@@ -374,7 +388,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
                 // attach the filters to app-filters-sidebar-container resources
                 this.filtersSidebarContainer.ngAfterContentInit();
                 this.listenForFilterChanges();
-            }, 10);
+            }, 100);
         }
     }
 
@@ -407,17 +421,12 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         setTimeout(() => {
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
-                console.log('We have no Grid Filters Filter Grid baseGridLoaded')
-                gridFilters = [];
+                    gridFilters = [];
             }
 
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.qstype && storedFilters.qstype !== '') {
                 // We have stored QuickSelect Info
-
-                console.log('we have QSearch Filters Filter Grid baseGridLoaded')
-                console.log(storedFilters)
-
                 const qstype = storedFilters.qstype
                 let qsearch = storedFilters.qsearch
 
@@ -450,11 +459,11 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
                         gridOptions.api.selectIndex(storedFilters.rowIndex, false, false);
                         storedFilters.rowIndex = 0;
                         this.gridFilterService.setFilter(gridFilters)
-                    }, 2000);
+                    }, 200);
 
                 }
             }
-        }, 2000);
+        }, 100);
     }
 
     baseGridReady($event) {
@@ -470,19 +479,13 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             // const activeFilters: IActiveFilter[] = state.activeFilters;
             let activeFilters: IActiveFilter[];
 
-
-            console.log('Current Active Filters')
-            console.log(state.activeFilters)
-
-
             // =========================Get Localstorage===============================
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
                 gridFilters = [];
-                console.log('BaseGridReady No GridFilters baseGridReady Filter Grid')
+             
             }
-            console.log('BaseGridReady Filter Grid we have Filters')
-            console.log(gridFilters)
+  
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.activeFilters) {
                 ('BaseGridReady Filter Grid using stored Filters')
@@ -518,17 +521,21 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         if (gridFilters && gridFilters.length > 0) {
             const activeFilters = [];
             if (gridFilters.length && gridFilters.find(x => x.gridGuid === this.gridGuid)) {
-                gridFilters.find(x => x.gridGuid === this.gridGuid).activeFilters.map(x => {
-                    if (x.value[0].selected === true) {
-                        const filter: any = this.filters.find(c => c.group === x.group)
-                        if (filter) {
-                            filter.filters.map(b => {
-                                b.selected = false;
-                            })// uncheck all options for filter
-                            filter.filters.find(v => v.name === x.value[0].name).selected = true;
+                const filteredGrid = gridFilters.find(x => x.gridGuid === this.gridGuid);
+                if (filteredGrid.activeFilters) {
+                    filteredGrid.activeFilters.map(x => {
+                        if (x.value[0].selected === true) {
+                            const filter: any = this.filters.find(c => c.group === x.group)
+                            if (filter) {
+                                filter.filters.map(b => {
+                                    b.selected = false;
+                                })// uncheck all options for filter
+                                filter.filters.find(v => v.name === x.value[0].name).selected = true;
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         }
 
@@ -543,7 +550,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             this.filtersSidebarContainer
                 .resources
                 .pipe(
-                    debounceTime(500),
+                    debounceTime(1000),
                     distinctUntilChanged(),
                 )
                 .subscribe(filters => {
@@ -561,8 +568,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
     private setActiveFilters(filters: IActiveFilter[]) {
 
-        console.log('filters------------------------------------------------------------------------');
-        console.log(filters);
         filters.forEach(filter => {
             const index = this.activeFilters.findIndex((item) => item.group === filter.group);
             if (index !== -1) {
@@ -661,8 +666,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         }
         this.reloadingNow = this.showLoading;
         this.setDataFetcherFactory($event.currentDataFetcherParams);
-        console.log($event.currentDataFetcherParams)
-        this.agGridBase.setDataSource(() => {
+        this?.agGridBase?.setDataSource(() => {
         });
     }
 
@@ -750,9 +754,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         }
     }
     click() {
-        console.log('Clicked one Item')
-        console.log(this.plusActions[0])
-        this.executeAction(this.plusActions[0]);
+          this.executeAction(this.plusActions[0]);
     }
     private executeAction(action: string) {
         if (action === 'Notification dialog') {
@@ -786,7 +788,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             })
         dialogRef.afterClosed().subscribe(result => {
             if (result === true) {
-                console.log('Will Exit without Saving');
                 dialogRef.close()
             } else {
             }

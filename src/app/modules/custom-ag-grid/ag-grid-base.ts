@@ -1,4 +1,4 @@
-import {ColDef, GetRowNodeIdFunc, GridOptions} from 'ag-grid-community';
+import {ColDef, GetRowNodeIdFunc,  GridOptions} from 'ag-grid-community';
 import {ContactFilter} from '../../enums/contact-filter.enum';
 import {FarmsFilter} from '../../enums/farms-filter.enum';
 import {MessageTrackingFilter} from '../../enums/message-tracking-filter.enum';
