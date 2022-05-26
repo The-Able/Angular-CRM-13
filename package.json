@@ -2,7 +2,7 @@
   "name": "igniteui-angular-samples",
   "version": "1.0.0",
   "license": "MIT",
-  "author": "Infragistics",
+  "author": "",
   "scripts": {
     "ng": "ng",
     "serve": "ng serve -o",

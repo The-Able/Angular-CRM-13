@@ -32,14 +32,12 @@
                             "src/ig.scss",
                             "./node_modules/froala-editor/css/froala_editor.pkgd.min.css",
                             "./node_modules/froala-editor/css/froala_style.min.css",
-                            "./froala/plugins/froala-emoji-picker/emojis.min.css",
                             "./node_modules/font-awesome/css/font-awesome.css"
                         ],
                         "scripts": [
                             "node_modules/hammerjs/hammer.min.js",
                             "./node_modules/jquery/dist/jquery.min.js",
                             "./node_modules/froala-editor/js/froala_editor.pkgd.min.js",
-                            "./froala/plugins/froala-emoji-picker/emojis.min.js"
                         ],
                         "aot": false,
                         "vendorChunk": true,
