@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
+import {Injectable, ViewChild} from '@angular/core';
 import {GridColumnsListGuids} from '../models/grid-columns-list-guids';
+// import { AgGridBaseComponent } from '../modules/custom-ag-grid/components/ag-grid-base/ag-grid-base.component';
 import {IAgGridSearchFilterResult} from '../modules/custom-ag-grid/components/ag-grid-search-filter/ag-grid-search-filter.component';
 
 @Injectable({
@@ -7,6 +8,8 @@ import {IAgGridSearchFilterResult} from '../modules/custom-ag-grid/components/ag
 })
 
 export class GridFiltersService {
+
+
 
     constructor() {
     }
@@ -53,6 +56,32 @@ export class GridFiltersService {
             if (activeFilters) {
                 return activeFilters
             }
+        }
+    }
+
+    loadSavedQuickSearch(gridGuid : string) {
+        // Load Grid Filters From Storage
+        const gridFilters = JSON.parse(localStorage.getItem('gridFilters'));
+        // Check if there is Grid Filters in Local Store 
+        if (gridFilters) {
+            console.log('Load Quick Search via Service')
+            // Get Object in GridFilters where the gridGuid matches the provided gridGuid
+            let activeFilters: any = gridFilters.find(x => x.gridGuid === gridGuid)
+            // If we have an active Filter and Quick Serach Data we will return them
+            if (activeFilters && activeFilters.qstype && activeFilters.qsearch && activeFilters.qtypeText) {
+                // TODO: Find a way to call a function on agGridBase component directly without having to return Data
+
+                // this.agGridBase.onSearchFilterChanged({
+                //     newValue: activeFilters.qsearch,
+                //     qstype: activeFilters.qstype,
+                //     qtypeText: activeFilters.qtypeText
+                // });
+
+                let filterData = { newValue: activeFilters.qsearch, qstype: activeFilters.qstype, qtypeText: activeFilters.qtypeText }
+                console.log(filterData)
+                return filterData
+            }
+           
         }
     }
 }

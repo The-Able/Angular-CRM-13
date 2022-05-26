@@ -269,11 +269,11 @@ export class AgGridBaseComponent extends AgGridBase implements OnInit, OnDestroy
                     const displayedColumns = params.columnApi.getAllDisplayedColumns();
                     return displayedColumns[0] === params.column;
                 },
-                headerCheckboxSelection: function (params) {
-                    const displayedColumns = params.columnApi.getAllDisplayedColumns();
-                    // console.log(displayedColumns[0] === params.column);
-                    return displayedColumns[0] === params.column;
-                },
+                // headerCheckboxSelection: function (params) {
+                //     const displayedColumns = params.columnApi.getAllDisplayedColumns();
+                //     // console.log(displayedColumns[0] === params.column);
+                //     return displayedColumns[0] === params.column;
+                // },
                 headerCheckboxSelectionFilteredOnly: true,
                 ...(column.type && {
                     ...(Array.isArray(column.type)

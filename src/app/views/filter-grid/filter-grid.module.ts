@@ -10,8 +10,6 @@ import {PhoneNumberWidgetsModule} from '../phone-numbers/phone-number-widgets.mo
 import {EmailWidgetsModule} from '../emails/email-widgets.module';
 import {BucketWidgetsModule} from '../buckets/bucket-widgets.module';
 import {ListWidgetsModule} from '../lists/list-widgets.module';
-import {FilterGridTest2Component} from './components/filter-grid-test-2/filter-grid-test-2.component';
-import {FilterGridTest1Component} from './components/filter-grid-test-1/filter-grid-test-1.component';
 import {FilterGridActionsComponent} from './components/filter-grid-actions/filter-grid-actions.component';
 import {EmailTemplateListComponent} from './components/email-template-list/email-template-list.component'
 
@@ -19,8 +17,6 @@ import {EmailTemplateListComponent} from './components/email-template-list/email
     declarations: [
         FilterGridComponent,
         FilterGridActionsComponent,
-        FilterGridTest1Component,
-        FilterGridTest2Component,
         EmailTemplateListComponent
     ],
     imports: [
@@ -40,8 +36,6 @@ import {EmailTemplateListComponent} from './components/email-template-list/email
     exports: [
         FilterGridComponent,
         FilterGridActionsComponent,
-        FilterGridTest1Component,
-        FilterGridTest2Component,
         EmailTemplateListComponent
     ]
 })

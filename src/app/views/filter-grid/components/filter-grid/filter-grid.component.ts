@@ -303,7 +303,17 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
 
     runFilterQuery(qsearch: string , qstype: string, qtypeText: string) {
-        this.agGridBase.onSearchFilterChanged({ newValue: qsearch, qstype: qstype, qtypeText: qtypeText });
+        // this.agGridBase.onSearchFilterChanged({ newValue: qsearch, qstype: qstype, qtypeText: qtypeText });
+
+        this.agGridBase.updateDataFetcherParam('qsearch', qsearch);
+        this.agGridBase.updateDataFetcherParam('qstype', qstype);
+        this.agGridBase.updateDataFetcherParam('qtypeText', qtypeText);
+
+        this.gridFilterService.updateFilter({ qsearch: qsearch, qstype: qstype, qtypeText: qtypeText }, this.gridGuid)
+
+        this.agGridBase.onGridReload.emit(
+            {currentDataFetcherParams: {qsearch: qsearch, qstype: qstype, qtypeText: qtypeText }}
+        )
     }
 
 
@@ -343,13 +353,10 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         }
         // initialize quick search
         if (!this.quickSearchTypeOptions) {
-            console.log('=============================quickSearchTypeOptionConfigId===============================================')
-            console.log(this.quickSearchTypeOptionConfigId)
+        
 
             this.filterGridService.getQuickSearchTypeOptions(this.quickSearchTypeOptionConfigId)
                 .subscribe(reply => {
-                    console.log('=============================quickSearchTypeOptions===============================================')
-                    console.log(reply)
                     this.quickSearchTypeOptions = reply;
                 });
         }
@@ -357,12 +364,10 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         if (!this.columns || (this.columns && this.hardReload)) {
             this.filterGridService.getColumnConfig(this.columnConfigId)
                 .subscribe(reply => {
-                    console.log('=============================columns===============================================')
-                    console.log(reply)
-                    this.columns = reply;
+                        this.columns = reply;
                     setTimeout(() => {
                         this.postConfig();
-                    }, 1000)
+                    }, 500)
                 });
         }
 
@@ -372,11 +377,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
     private postConfig() {
         this.isGridLoaded = true;
-        console.log('=================================*postConfig=================')
-        console.log(this.columns)
-        console.log(this.filters)
-        console.log(this.quickSearchTypeOptions)
-        if (!this.columns || (!this.filters) || !this.quickSearchTypeOptions) {
+          if (!this.columns || (!this.filters) || !this.quickSearchTypeOptions) {
             return;
         }
 
@@ -384,11 +385,10 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         // allow time for the data to render
         if (this.filters.length > 0) {
             setTimeout(() => {
-                console.log('=================================***************=================')
                 // attach the filters to app-filters-sidebar-container resources
                 this.filtersSidebarContainer.ngAfterContentInit();
                 this.listenForFilterChanges();
-            }, 1000);
+            }, 100);
         }
     }
 
@@ -421,17 +421,12 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         setTimeout(() => {
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
-                console.log('We have no Grid Filters Filter Grid baseGridLoaded')
-                gridFilters = [];
+                    gridFilters = [];
             }
 
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.qstype && storedFilters.qstype !== '') {
                 // We have stored QuickSelect Info
-
-                console.log('we have QSearch Filters Filter Grid baseGridLoaded')
-                console.log(storedFilters)
-
                 const qstype = storedFilters.qstype
                 let qsearch = storedFilters.qsearch
 
@@ -458,18 +453,17 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             }
 
             if (storedFilters && storedFilters.activeFilters) {
-                console.log('Callong a store Filters in filter-grid line 461')
                 if (storedFilters.rowIndex) {
                     gridOptions.api.ensureIndexVisible(storedFilters.rowIndex, 'middle');
                     setTimeout(() => {
                         gridOptions.api.selectIndex(storedFilters.rowIndex, false, false);
                         storedFilters.rowIndex = 0;
                         this.gridFilterService.setFilter(gridFilters)
-                    }, 2000);
+                    }, 200);
 
                 }
             }
-        }, 2000);
+        }, 100);
     }
 
     baseGridReady($event) {
@@ -485,19 +479,13 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             // const activeFilters: IActiveFilter[] = state.activeFilters;
             let activeFilters: IActiveFilter[];
 
-
-            console.log('Current Active Filters')
-            console.log(state.activeFilters)
-
-
             // =========================Get Localstorage===============================
             let gridFilters: any = JSON.parse(localStorage.getItem('gridFilters'))
             if (!gridFilters || !gridFilters.length) {
                 gridFilters = [];
-                console.log('BaseGridReady No GridFilters baseGridReady Filter Grid')
+             
             }
-            console.log('BaseGridReady Filter Grid we have Filters')
-            console.log(gridFilters)
+  
             const storedFilters: any = gridFilters.find(x => x.gridGuid === this.gridGuid);
             if (storedFilters && storedFilters.activeFilters) {
                 ('BaseGridReady Filter Grid using stored Filters')
@@ -558,9 +546,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
     }
 
     private listenForFilterChanges() {
-        console.log('==================listenForFilterChanges=========================');
-        console.log(this.filtersSidebarContainer);
-
         this.subs.push(
             this.filtersSidebarContainer
                 .resources
@@ -583,8 +568,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
 
     private setActiveFilters(filters: IActiveFilter[]) {
 
-        console.log('filters------------------------------------------------------------------------');
-        console.log(filters);
         filters.forEach(filter => {
             const index = this.activeFilters.findIndex((item) => item.group === filter.group);
             if (index !== -1) {
@@ -683,7 +666,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         }
         this.reloadingNow = this.showLoading;
         this.setDataFetcherFactory($event.currentDataFetcherParams);
-        console.log($event.currentDataFetcherParams)
         this?.agGridBase?.setDataSource(() => {
         });
     }
@@ -772,9 +754,7 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
         }
     }
     click() {
-        console.log('Clicked one Item')
-        console.log(this.plusActions[0])
-        this.executeAction(this.plusActions[0]);
+          this.executeAction(this.plusActions[0]);
     }
     private executeAction(action: string) {
         if (action === 'Notification dialog') {
@@ -808,7 +788,6 @@ export class FilterGridComponent implements OnInit, OnDestroy, IAgGridBaseParent
             })
         dialogRef.afterClosed().subscribe(result => {
             if (result === true) {
-                console.log('Will Exit without Saving');
                 dialogRef.close()
             } else {
             }
